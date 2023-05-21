@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../styles/login.module.css';
+import { Navigate } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 // import { login } from '../api';
 import { useAuth } from '../hooks';
@@ -10,7 +11,6 @@ const Login = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const { addToast } = useToasts();
   const auth = useAuth();
-  console.log(auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); //it is used so that as soon as submit pressed it reloaded
@@ -26,6 +26,7 @@ const Login = () => {
     const response = await auth.login(email, password);
 
     if (response.success) {
+      console.log('auth', auth);
       addToast('Successfully Logged In', {
         appearance: 'success',
       });
@@ -37,6 +38,9 @@ const Login = () => {
 
     setLoggedIn(false);
   };
+  if (auth.user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <form className={styles.loginForm} onSubmit={handleSubmit}>
